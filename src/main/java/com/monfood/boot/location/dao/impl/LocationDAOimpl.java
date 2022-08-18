@@ -35,7 +35,7 @@ public class LocationDAOimpl implements LocationDAO{
 	public List<LocationVO> findByPrimaryKey(Integer userId){
 		
 		if (userId != null) {
-			return this.getSession().createQuery("FROM LocationVO WHERE userId = :userId").setParameter("userId", userId).list();
+			return this.getSession().createQuery("FROM LocationVO WHERE userId = :userId", LocationVO.class).setParameter("userId", userId).list();
 		}
 		
 		return null;
