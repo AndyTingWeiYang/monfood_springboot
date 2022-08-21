@@ -89,7 +89,7 @@ public class OrderDAOimpl implements OrderDAO {
 			OrderVO temp = this.getSession().get(OrderVO.class, orderId);
 			if (temp != null) {
 				this.getSession().createQuery("UPDATE OrderVO SET delId = :delId WHERE orderId = :orderId")
-								 .setParameter("delId", orderVO.getDelId())
+								 .setParameter("delId", orderVO.getDel())
 								 .setParameter("orderId", orderVO.getOrderId())
 								 .executeUpdate();
 			}
