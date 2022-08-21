@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.monfood.boot.del.DelBean;
 import com.monfood.boot.orderdetail.OrderDetailVO;
 import com.monfood.boot.product.ProductVo;
 import com.monfood.boot.res.ResVO;
@@ -22,6 +23,21 @@ import com.monfood.boot.res.ResVO;
 public class OrderVO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
+	@ManyToOne
+	@JoinColumn(
+			name = "DEL_ID",
+			referencedColumnName = "DEL_ID"
+	)
+	private DelBean del;
+	
+	public DelBean getDel() {
+		return del;
+	}
+
+	public void setDel(DelBean del) {
+		this.del = del;
+	}
+
 	@Id
 	@Column(name = "ORDER_ID")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +49,8 @@ public class OrderVO implements Serializable{
 //	@Column(name = "RES_ID")
 //	private Integer resId;
 	
-	@Column(name = "DEL_ID", nullable = true)
-	private Integer delId;
+//	@Column(name = "DEL_ID", nullable = true)
+//	private Integer delId;
 	
 	@Column(name = "ORDER_STATUS", insertable = false)
 	private Integer orderStatus;
@@ -103,7 +119,7 @@ public class OrderVO implements Serializable{
 	}
 
 	public OrderVO(OrderDetailVO orderDetailVO, ProductVo productVo, ResVO resVO, Integer orderId, Integer userId,
-			Integer delId, Integer orderStatus, String note, String userLocation, Timestamp orderCreate,
+			DelBean del, Integer orderStatus, String note, String userLocation, Timestamp orderCreate,
 			Timestamp orderDone, Integer productKcalTotal, Integer total, Integer delCost, Boolean useCash,
 			String creditId, Integer discount, Boolean rating, Double resRate, Double delRate, String resComment,
 			String delComment, Integer promoteId) {
@@ -113,7 +129,7 @@ public class OrderVO implements Serializable{
 		this.resVO = resVO;
 		this.orderId = orderId;
 		this.userId = userId;
-		this.delId = delId;
+		this.del = del;
 		this.orderStatus = orderStatus;
 		this.note = note;
 		this.userLocation = userLocation;
@@ -173,13 +189,13 @@ public class OrderVO implements Serializable{
 		this.userId = userId;
 	}
 
-	public Integer getDelId() {
-		return delId;
-	}
-
-	public void setDelId(Integer delId) {
-		this.delId = delId;
-	}
+//	public Integer getDelId() {
+//		return delId;
+//	}
+//
+//	public void setDelId(Integer delId) {
+//		this.delId = delId;
+//	}
 
 	public Integer getOrderStatus() {
 		return orderStatus;
