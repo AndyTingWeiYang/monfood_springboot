@@ -12,8 +12,8 @@ public interface PairListDAO {
 	boolean updateUseraAnswer(PairListVO pairListVO);
 	boolean updateUserbAnswer(PairListVO pairListVO);
 	boolean updateStatus(PairListVO pairListVO);
-	List<PairListVO> selectByIdAndStatus(Integer useraId) ;
-	List<PairListVO> selectById(Integer useraId);
+	List selectByIdAndStatus(Integer useraId) ;
+	List selectById(Integer useraId);
 	List<PairListVO> selectById2(Integer useraId);
 	Integer selectByIdAndPairedDate(Integer useraId, java.sql.Date pairedDate );
 

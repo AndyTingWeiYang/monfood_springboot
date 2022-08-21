@@ -6,10 +6,18 @@ import java.util.List;
 import javax.persistence.PersistenceContext;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.springframework.stereotype.Repository;
 
 import com.monfood.boot.pairlist.PairListVO;
 import com.monfood.boot.pairlist.dao.PairListDAO;
+
+
+
 
 @Repository
 public class PairListDAOImpl implements PairListDAO {
@@ -23,6 +31,7 @@ public class PairListDAOImpl implements PairListDAO {
 	
 	// 將名單放進PairList
 	// INSERT INTO `MonFood`.`PAIR_LIST` ( `USER_A_ID`, `USER_B_ID`,`PAIRED_DATE` ) VALUES ( ?, ?, ?);
+	@Override
 	public boolean insert(PairListVO pairListVO) {
 		if (pairListVO != null && pairListVO.getPairId() != null) {
 			PairListVO temp = this.getSession().get(PairListVO.class, pairListVO.getPairId());
@@ -37,8 +46,9 @@ public class PairListDAOImpl implements PairListDAO {
 	// 更新A會員答案
 		// update PAIR_LIST set USER_A_ANSWER = ? where USER_A_ID = ? and PAIRED_DATE = ?;
 		//where第一個?為A會員ID，後面日期?為當天日期
+	@Override
 		public boolean updateUseraAnswer(PairListVO pairListVO) {
-			String hql = "update pairListVO set useraAnswer = :useraAnswer where useraId = :useraId and pairedDate = :pairedDate";
+			String hql = "update PairListVO set useraAnswer = :useraAnswer where useraId = :useraId and pairedDate = :pairedDate";
 			getSession().createQuery(hql)
 					.setParameter("useraAnswer", pairListVO.getUseraAnswer())
 					.setParameter("useraId", pairListVO.getUseraId())
@@ -46,12 +56,15 @@ public class PairListDAOImpl implements PairListDAO {
 					.executeUpdate();
 			return true;		
 		}
+	
+
 		
 		// 更新B會員答案
 		// update PAIR_LIST set USER_B_ANSWER = ? where USER_B_ID = ? and PAIRED_DATE = ?;
 		//where第一個?為A會員ID，後面日期?為當天日期
+	@Override
 		public boolean updateUserbAnswer(PairListVO pairListVO) {
-			String hql = "update pairListVO set userbAnswer = :userbAnswer where userbId = :userbId and pairedDate = :pairedDate";
+			String hql = "update PairListVO set userbAnswer = :userbAnswer where userbId = :userbId and pairedDate = :pairedDate";
 			getSession().createQuery(hql)
 					.setParameter("userbAnswer", pairListVO.getUserbAnswer())
 					.setParameter("userbId", pairListVO.getUserbId())
@@ -62,8 +75,9 @@ public class PairListDAOImpl implements PairListDAO {
 		
 		// 更改好友狀態>雙方接受配對成為好友
 		// update PAIR_LIST set STATUS = 1 where USER_A_ANSWER = 1 and USER_B_ANSWER =1;
+	@Override
 		public boolean updateStatus(PairListVO pairListVO) {
-			String hql = "update pairListVO set status = :status where useraAnswer = :useraAnswer and userbAnswer = :userbAnswer";
+			String hql = "update PairListVO set status = :status where useraAnswer = :useraAnswer and userbAnswer = :userbAnswer";
 			getSession().createQuery(hql)
 					.setParameter("status", 1)
 					.setParameter("useraAnswer",1)
@@ -81,7 +95,8 @@ public class PairListDAOImpl implements PairListDAO {
 //	select USER_A_ID from PAIR_LIST where USER_B_ID = ? and STATUS = 1;
 	
 	@SuppressWarnings("unchecked")
-	public List<PairListVO> selectByIdAndStatus(Integer useraId) {
+	@Override
+	public List selectByIdAndStatus(Integer useraId) {
 		String sql = "select USER_B_ID from Pair_List where USER_A_ID = :useraId and STATUS = :status "
 				+ "union "
 				+ "select USER_A_ID from Pair_List where USER_B_ID = :userbId and STATUS = :status";
@@ -94,20 +109,23 @@ public class PairListDAOImpl implements PairListDAO {
 	
 	//尋找A會員是否已被配對過 (雙向)  ( ?為A會員ID) 
 //	select USER_A_ID from PAIR_LIST where USER_B_ID = ?
-	@SuppressWarnings("unchecked")
-	public List<PairListVO> selectById(Integer useraId){
-		String hql = "select useraId from pairListVO where userbId = :userbId ";
-		return getSession().createQuery(hql)
+	@Override
+	public List selectById(Integer useraId){
+		String hql = "select useraId from PairListVO where userbId = :userbId ";
+		List temp  =  getSession().createQuery(hql,Integer.class)
 				.setParameter("userbId", useraId)
 				.list();
+		return temp;
 	}
+	
 	
 	//尋找A會員是否已被配對過 (雙向2)  ( ?為A會員ID) 
 //	select USER_B_ID from PAIR_LIST where USER_A_ID = ?
 	@SuppressWarnings("unchecked")
-	public List<PairListVO> selectById2(Integer useraId) {
-		String hql = "select userbId from pairListVO where useraId = :useraId ";
-		return getSession().createQuery(hql)
+	@Override
+	public List selectById2(Integer useraId) {
+		String hql = "select userbId from PairListVO where useraId = :useraId ";
+		return getSession().createQuery(hql,Integer.class)
 				.setParameter("useraId", useraId)
 				.list();
 	}
@@ -117,6 +135,7 @@ public class PairListDAOImpl implements PairListDAO {
 //	select USER_B_ID from PAIR_LIST where USER_A_ID = ? and PAIRED_DATE = ?
 //	union
 //	select USER_A_ID from PAIR_LIST where USER_B_ID = ? and PAIRED_DATE = ?;
+	@Override
 	public Integer selectByIdAndPairedDate(Integer useraId, java.sql.Date pairedDate ) {
 		String sql = "select USER_B_ID from PAIR_LIST where USER_A_ID = :useraId and PAIRED_DATE = :pairedDate "
 				+ "union "
@@ -138,11 +157,11 @@ public class PairListDAOImpl implements PairListDAO {
 //
 //		Session session = sessionFactory.getCurrentSession();
 //		Transaction transaction = session.beginTransaction();
+//
+//		PairListDao dao = new PairListDaoImpl(sessionFactory);
 
-//	PairListDao dao = new PairListDaoImpl(sessionFactory);
-	
 //		// insert
-//		pairListVO insert = new pairListVO();
+//		PairListVo insert = new PairListVo();
 //		insert.setPairId(1);
 //		insert.setUseraId(3);
 //		insert.setUserbId(2);
@@ -153,7 +172,7 @@ public class PairListDAOImpl implements PairListDAO {
 //		System.out.println("insert= " + insert);
 		
 		//updateUseraAnswer
-//		pairListVO update = new pairListVO();
+//		PairListVo update = new PairListVo();
 //		update.setUseraAnswer(1);
 //		update.setUseraId(5);
 //		java.util.Date date = new java.util.Date();
@@ -163,7 +182,7 @@ public class PairListDAOImpl implements PairListDAO {
 //		System.out.println("update=" + update);
 		
 		//updateUserbAnswer
-//		pairListVO update = new pairListVO();
+//		PairListVo update = new PairListVo();
 //		update.setUserbAnswer(1);
 //		update.setUserbId(2);
 //		java.util.Date date = new java.util.Date();
@@ -174,23 +193,23 @@ public class PairListDAOImpl implements PairListDAO {
 		
 		
 		//updateStatus
-//		pairListVO update = new pairListVO();
+//		PairListVo update = new PairListVo();
 //		dao.updateStatus(update);	
 		
 		// select
 		// selectByIdAndStatus
-//		List<pairListVO> select = dao.selectByIdAndStatus(1);
+//		List<PairListVo> select = dao.selectByIdAndStatus(1);
 //		System.out.println("select = "+select);
 		// 單個取出
 //		for (Object o : select) {
 //			System.out.print(o + ",");
 //			}
 		//selectById 
-//		List<pairListVO> select = dao.selectById(1);
+//		List<PairListVo> select = dao.selectById(1);
 //		System.out.println("select = "+select);
 		
 		//selectById2 
-//		List<pairListVO> select = dao.selectById2(1);
+//		List<PairListVo> select = dao.selectById2(1);
 //		System.out.println("select = "+select);
 		
 		//selectByIdAndPairedDate
@@ -198,11 +217,10 @@ public class PairListDAOImpl implements PairListDAO {
 //		java.sql.Date today = new java.sql.Date(date.getTime());
 //		Integer select = dao.selectByIdAndPairedDate(3,today);
 //		System.out.println("select = "+select);
-
+//
 //		transaction.commit();
 //		session.close();
 //		sessionFactory.close();
 //
 //	}
-
 }
