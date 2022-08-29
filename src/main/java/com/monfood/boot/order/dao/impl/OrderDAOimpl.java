@@ -109,9 +109,11 @@ public class OrderDAOimpl implements OrderDAO {
 
 	@Override
 	public List<OrderVO> getAllProductById(Integer userId) {
-//		private static final String GET_PRODUCT_BY_ID = "SELECT o.ORDER_ID, p.PRODUCT_NAME, p.PRODUCT_KCAL FROM `ORDER` o\r\n"
-//				+ "join ORDER_DETAIL d\r\n" + "on d.ORDER_ID = o.ORDER_ID\r\n" + "join PRODUCT p\r\n"
-//				+ "on p.PRODUCT_ID = d.PRODUCT_ID\r\n" + "where o.USER_ID =?\r\n" + "order by o.ORDER_ID";
+		if (userId != null) {
+			return this.getSession().createQuery("SELECT o FROM OrderVO o join fetch o.orderDetailVO od join fetch od.productVo p where o.userId = :userId", OrderVO.class)
+									.setParameter("userId", userId)
+									.list();
+		}
 		return null;
 		
 	}

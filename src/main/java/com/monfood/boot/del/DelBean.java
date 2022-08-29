@@ -16,13 +16,15 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 import com.monfood.boot.order.OrderVO;
 
 @Entity
 @Table(name="DEL")
 @NamedQueries(value = {
 		@NamedQuery(name = "del.DelBean.all", query = "From DelBean"),
-		@NamedQuery(name = "del.DelBean.getComment", query = "select DEL_COMMENT, count() from ORDER o, DEL d where o.DEL_ID = d.DEL_ID")
+//		@NamedQuery(name = "del.DelBean.getComment", query = "select DEL_COMMENT, count() from OrderVO o, DelBean d where o.DEL_ID = d.DEL_ID")
 })
 
 public class DelBean {

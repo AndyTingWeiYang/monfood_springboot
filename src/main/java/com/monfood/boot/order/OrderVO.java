@@ -2,7 +2,10 @@ package com.monfood.boot.order;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Objects;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,12 +13,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.monfood.boot.del.DelBean;
 import com.monfood.boot.orderdetail.OrderDetailVO;
-import com.monfood.boot.product.ProductVo;
 import com.monfood.boot.res.ResVO;
 
 @Entity
@@ -23,21 +25,6 @@ import com.monfood.boot.res.ResVO;
 public class OrderVO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
-	@ManyToOne
-	@JoinColumn(
-			name = "DEL_ID",
-			referencedColumnName = "DEL_ID"
-	)
-	private DelBean del;
-	
-	public DelBean getDel() {
-		return del;
-	}
-
-	public void setDel(DelBean del) {
-		this.del = del;
-	}
-
 	@Id
 	@Column(name = "ORDER_ID")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,12 +32,6 @@ public class OrderVO implements Serializable{
 	
 	@Column(name = "USER_ID")
 	private Integer userId;
-	
-//	@Column(name = "RES_ID")
-//	private Integer resId;
-	
-//	@Column(name = "DEL_ID", nullable = true)
-//	private Integer delId;
 	
 	@Column(name = "ORDER_STATUS", insertable = false)
 	private Integer orderStatus;
@@ -103,10 +84,11 @@ public class OrderVO implements Serializable{
 	@Column(name = "PROMOTE_ID", nullable = true)
 	private Integer promoteId;
 	
-	@Transient
-	private OrderDetailVO orderDetailVO;
-	@Transient
-	private ProductVo productVo;
+	@OneToMany(
+			mappedBy = "orderVO",
+			cascade = {CascadeType.REMOVE} 
+	)
+	private Set<OrderDetailVO> orderDetailVO;
 	
 	@ManyToOne
 	@JoinColumn(
@@ -115,21 +97,23 @@ public class OrderVO implements Serializable{
 	)
 	private ResVO resVO;
 	
+	@ManyToOne
+	@JoinColumn(
+			name = "DEL_ID",
+			referencedColumnName = "DEL_ID"
+	)
+	private DelBean del;
+	
 	public OrderVO() {
 	}
 
-	public OrderVO(OrderDetailVO orderDetailVO, ProductVo productVo, ResVO resVO, Integer orderId, Integer userId,
-			DelBean del, Integer orderStatus, String note, String userLocation, Timestamp orderCreate,
-			Timestamp orderDone, Integer productKcalTotal, Integer total, Integer delCost, Boolean useCash,
-			String creditId, Integer discount, Boolean rating, Double resRate, Double delRate, String resComment,
-			String delComment, Integer promoteId) {
-		super();
-		this.orderDetailVO = orderDetailVO;
-		this.productVo = productVo;
-		this.resVO = resVO;
+	public OrderVO(Integer orderId, Integer userId, Integer orderStatus, String note, String userLocation,
+			Timestamp orderCreate, Timestamp orderDone, Integer productKcalTotal, Integer total, Integer delCost,
+			Boolean useCash, String creditId, Integer discount, Boolean rating, Double resRate, Double delRate,
+			String resComment, String delComment, Integer promoteId, Set<OrderDetailVO> orderDetailVO, ResVO resVO,
+			DelBean del) {
 		this.orderId = orderId;
 		this.userId = userId;
-		this.del = del;
 		this.orderStatus = orderStatus;
 		this.note = note;
 		this.userLocation = userLocation;
@@ -147,30 +131,9 @@ public class OrderVO implements Serializable{
 		this.resComment = resComment;
 		this.delComment = delComment;
 		this.promoteId = promoteId;
-	}
-
-	public OrderDetailVO getOrderDetailVO() {
-		return orderDetailVO;
-	}
-
-	public void setOrderDetailVO(OrderDetailVO orderDetailVO) {
 		this.orderDetailVO = orderDetailVO;
-	}
-
-	public ProductVo getProductVo() {
-		return productVo;
-	}
-
-	public void setProductVo(ProductVo productVo) {
-		this.productVo = productVo;
-	}
-
-	public ResVO getResVO() {
-		return resVO;
-	}
-
-	public void setResVO(ResVO resVO) {
 		this.resVO = resVO;
+		this.del = del;
 	}
 
 	public Integer getOrderId() {
@@ -188,14 +151,6 @@ public class OrderVO implements Serializable{
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
-
-//	public Integer getDelId() {
-//		return delId;
-//	}
-//
-//	public void setDelId(Integer delId) {
-//		this.delId = delId;
-//	}
 
 	public Integer getOrderStatus() {
 		return orderStatus;
@@ -333,4 +288,45 @@ public class OrderVO implements Serializable{
 		this.promoteId = promoteId;
 	}
 
+	public Set<OrderDetailVO> getOrderDetailVO() {
+		return orderDetailVO;
+	}
+
+	public void setOrderDetailVO(Set<OrderDetailVO> orderDetailVO) {
+		this.orderDetailVO = orderDetailVO;
+	}
+
+	public ResVO getResVO() {
+		return resVO;
+	}
+
+	public void setResVO(ResVO resVO) {
+		this.resVO = resVO;
+	}
+
+	public DelBean getDel() {
+		return del;
+	}
+
+	public void setDel(DelBean del) {
+		this.del = del;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(orderId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		OrderVO other = (OrderVO) obj;
+		return Objects.equals(orderId, other.orderId);
+	}
+	
 }

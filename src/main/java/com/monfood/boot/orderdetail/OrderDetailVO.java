@@ -6,21 +6,33 @@ import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.monfood.boot.order.OrderVO;
+import com.monfood.boot.product.ProductVo;
 
 @Entity
 @Table(name = "ORDER_DETAIL")
-
 public class OrderDetailVO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Column(name = "PRODUCT_ID")
-	private Integer productId;
+	@ManyToOne
+	@JoinColumn(
+			name = "PRODUCT_ID",
+			referencedColumnName = "PRODUCT_ID"
+	)
+	private ProductVo productVo;
 	
 	@Id
-	@Column(name = "ORDER_ID")
-	private Integer orderId;
+	@ManyToOne
+	@JoinColumn(
+			name = "ORDER_ID",
+			referencedColumnName = "ORDER_ID"
+	)
+	private OrderVO orderVO;
 	
 	@Column(name = "AMOUNT")
 	private Integer amount;
@@ -30,42 +42,50 @@ public class OrderDetailVO implements Serializable{
 	
 	public OrderDetailVO() {
 	}
-	
-	public OrderDetailVO(Integer productId, Integer orderId, Integer amount, Integer orderedPrice) {
-		this.productId = productId;
-		this.orderId = orderId;
+
+	public OrderDetailVO(ProductVo productVo, OrderVO orderVO, Integer amount, Integer orderedPrice) {
+		super();
+		this.productVo = productVo;
+		this.orderVO = orderVO;
 		this.amount = amount;
 		this.orderedPrice = orderedPrice;
 	}
-	
-	public Integer getProductId() {
-		return productId;
+
+	public ProductVo getProductVo() {
+		return productVo;
 	}
-	public void setProductId(Integer productId) {
-		this.productId = productId;
+
+	public void setProductVo(ProductVo productVo) {
+		this.productVo = productVo;
 	}
-	public Integer getOrderId() {
-		return orderId;
+
+	public OrderVO getOrderVO() {
+		return orderVO;
 	}
-	public void setOrderId(Integer orderId) {
-		this.orderId = orderId;
+
+	public void setOrderVO(OrderVO orderVO) {
+		this.orderVO = orderVO;
 	}
+
 	public Integer getAmount() {
 		return amount;
 	}
+
 	public void setAmount(Integer amount) {
 		this.amount = amount;
 	}
+
 	public Integer getOrderedPrice() {
 		return orderedPrice;
 	}
+
 	public void setOrderedPrice(Integer orderedPrice) {
 		this.orderedPrice = orderedPrice;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(orderId, productId);
+		return Objects.hash(orderVO, productVo);
 	}
 
 	@Override
@@ -77,8 +97,7 @@ public class OrderDetailVO implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		OrderDetailVO other = (OrderDetailVO) obj;
-		return Objects.equals(orderId, other.orderId) && Objects.equals(productId, other.productId);
+		return Objects.equals(orderVO, other.orderVO) && Objects.equals(productVo, other.productVo);
 	}
-
 	
 }

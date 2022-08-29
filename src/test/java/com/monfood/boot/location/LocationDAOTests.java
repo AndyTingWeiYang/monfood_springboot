@@ -27,6 +27,5 @@ public class LocationDAOTests {
 	public void testFindByPrimaryKey(){
 		List<LocationVO> result = locationDAO.findByPrimaryKey(6);
 		System.out.println(result);
-
 	}
 }

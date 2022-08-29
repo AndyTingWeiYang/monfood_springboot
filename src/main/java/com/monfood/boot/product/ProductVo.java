@@ -3,6 +3,7 @@ package com.monfood.boot.product;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Objects;
 
 import javax.persistence.Table;
 
@@ -146,6 +147,22 @@ public class ProductVo implements Serializable {
 				+ ", stock=" + stock + ", updateTime=" + updateTime + ", productPic=" + Arrays.toString(productPic)
 				+ "]";
 	}
-	
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(productID);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProductVo other = (ProductVo) obj;
+		return Objects.equals(productID, other.productID);
+	}
+	
 }
