@@ -1,4 +1,4 @@
-package com.monfood.boot.location;
+package com.monfood.boot.location.dao;
 
 import java.util.List;
 
@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.monfood.boot.location.LocationVO;
 import com.monfood.boot.location.dao.LocationDAO;
 
 @SpringBootTest

@@ -85,11 +85,13 @@ public class OrderDAOimpl implements OrderDAO {
 	@Override
 	public void updateDelId(OrderVO orderVO) {
 		final Integer orderId = orderVO.getOrderId();
+		System.out.println(orderId);
+		System.out.println(orderVO.getDel().getDelid());
 		if (orderId != null && orderVO != null) {
 			OrderVO temp = this.getSession().get(OrderVO.class, orderId);
 			if (temp != null) {
-				this.getSession().createQuery("UPDATE OrderVO SET delId = :delId WHERE orderId = :orderId")
-								 .setParameter("delId", orderVO.getDel())
+				this.getSession().createQuery("UPDATE OrderVO SET DEL_ID = :delId WHERE orderId = :orderId")
+								 .setParameter("delId", orderVO.getDel().getDelid())
 								 .setParameter("orderId", orderVO.getOrderId())
 								 .executeUpdate();
 			}

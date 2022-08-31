@@ -1,32 +1,31 @@
-package com.monfood.boot.orderdetail;
+package com.monfood.boot.orderdetail.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.monfood.boot.order.OrderVO;
-import com.monfood.boot.orderdetail.dao.OrderDetailDAO;
+import com.monfood.boot.orderdetail.OrderDetailVO;
 import com.monfood.boot.product.ProductVo;
 
 @SpringBootTest
-public class OrderDetailDAOTests {
-
+public class OrderDetailServiceTests {
+	
 	@Autowired
-	private OrderDetailDAO orderDetailDAO;
+	private OrderDetailService orderDetailService;
 	
 	@Test
-	public void testInsert() {
+	public void testCreateOrderDetail() {
 		ProductVo productVo = new ProductVo();
-		productVo.setProductID(23);
+		productVo.setProductID(24);
 		OrderVO orderVO = new OrderVO();
-		orderVO.setOrderId(200);
+		orderVO.setOrderId(244);
 		OrderDetailVO orderDetailVO = new OrderDetailVO();
 		orderDetailVO.setProductVo(productVo);
 		orderDetailVO.setOrderVO(orderVO);
 		orderDetailVO.setAmount(1);
 		orderDetailVO.setOrderedPrice(10);
-		boolean result = orderDetailDAO.insert(orderDetailVO);
-		System.out.println(result);
+		System.out.println(orderDetailService.createOrderDetail(orderDetailVO));
 	}
-	
 }

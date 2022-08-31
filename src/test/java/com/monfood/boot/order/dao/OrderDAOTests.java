@@ -1,4 +1,4 @@
-package com.monfood.boot.order;
+package com.monfood.boot.order.dao;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.monfood.boot.del.DelBean;
-import com.monfood.boot.order.dao.OrderDAO;
+import com.monfood.boot.order.OrderVO;
 import com.monfood.boot.orderdetail.OrderDetailVO;
 import com.monfood.boot.res.ResVO;
 
