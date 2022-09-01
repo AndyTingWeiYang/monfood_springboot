@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.monfood.boot.order.OrderVO;
 import com.monfood.boot.product.ProductVo;
 
@@ -20,6 +22,7 @@ public class OrderDetailVO implements Serializable{
 	
 	@Id
 	@ManyToOne
+	@JsonBackReference(value = "productId")
 	@JoinColumn(
 			name = "PRODUCT_ID",
 			referencedColumnName = "PRODUCT_ID"
@@ -28,6 +31,7 @@ public class OrderDetailVO implements Serializable{
 	
 	@Id
 	@ManyToOne
+	@JsonBackReference(value = "orderId")
 	@JoinColumn(
 			name = "ORDER_ID",
 			referencedColumnName = "ORDER_ID"

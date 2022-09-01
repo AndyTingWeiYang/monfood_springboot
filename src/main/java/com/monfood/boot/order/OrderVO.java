@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.monfood.boot.del.DelBean;
 import com.monfood.boot.orderdetail.OrderDetailVO;
 import com.monfood.boot.res.ResVO;
@@ -84,6 +86,7 @@ public class OrderVO implements Serializable{
 	@Column(name = "PROMOTE_ID", nullable = true)
 	private Integer promoteId;
 	
+	@JsonManagedReference(value = "orderId")
 	@OneToMany(
 			mappedBy = "orderVO",
 			cascade = {CascadeType.REMOVE} 
@@ -91,6 +94,7 @@ public class OrderVO implements Serializable{
 	private Set<OrderDetailVO> orderDetailVO;
 	
 	@ManyToOne
+	@JsonBackReference(value = "resId")
 	@JoinColumn(
 			name = "RES_ID",
 			referencedColumnName = "RES_ID"
@@ -98,6 +102,7 @@ public class OrderVO implements Serializable{
 	private ResVO resVO;
 	
 	@ManyToOne
+	@JsonBackReference(value = "delId")
 	@JoinColumn(
 			name = "DEL_ID",
 			referencedColumnName = "DEL_ID"

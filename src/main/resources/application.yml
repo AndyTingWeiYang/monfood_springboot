@@ -1,3 +1,7 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /monfood_springboot
 spring:
   # DataSource
   datasource:
@@ -14,6 +18,9 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+#    properties.hibernate:
+#      enable_lazy_load_no_trans: true
+            
   messages:
     basename: i18n.Message
     encoding: UTF-8
@@ -23,6 +30,14 @@ spring:
     view:
       prefix: /WEB-INF/views
       suffix: .jsp
-      
-# custom property
-passwordLength: 20
+  # jackson
+  jackson:
+    default-property-inclusion: non-null
+    time-zone: GMT+8
+
+
+
+
+
+
+
